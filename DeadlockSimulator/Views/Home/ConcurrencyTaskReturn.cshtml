@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Concurrency";
+}
+
+<h2>You have two seconds to press F12 to watch diagnostics</h2>
+<h3>@ViewBag.Message</h3>
+
+<script type="text/javascript">
+    const clientCountAtTheMoment = 1280;
+    setTimeout(() => {
+        const taskLog = async (i) =>
+            fetch("/Home/GetAnEmptyStringAsJsonTask",
+                {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                })
+                .then(response => response.text())
+                .then(message => console.log(i, message));
+        Array
+            .from({ length: clientCountAtTheMoment }, (_, k) => k)
+            .map(i => taskLog(i));
+    }, 2000);
+</script>
